@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicTacToeBot</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1>Train your own Tic-Tac-Toe Bot!</h1>
+    <div id="board">
+        <div class="row" id="rowa">
+            <div class="square corner selectable" id="a-a">
+            </div>
+            <div class="square side selectable" id="a-b">
+            </div>
+            <div class="square corner selectable" id="a-c">
+            </div>
+        </div>
+        <div class="row" id="rowb">
+            <div class="square side selectable" id="b-a">
+            </div>
+            <div class="square center selectable" id="b-b">
+            </div>
+            <div class="square side selectable" id="b-c">
+            </div>
+        </div>
+        <div class="row" id="rowc">
+            <div class="square corner selectable" id="c-a">
+            </div>
+            <div class="square side selectable" id="c-b">
+            </div>
+            <div class="square corner selectable" id="c-c">
+            </div>
+        </div>
+    </div>
+    <div id="scores">
+        <div id="xScore" class="score">
+            <p>X:</p>
+            <p id="xScoreVal">0</p>
+        </div>
+        <div id="tieScore" class="score">
+            <p>TIE:</p>
+            <p id="tieScoreVal">0</p>
+        </div>
+        <div id="oScore" class="score">
+            <p>O:</p>
+            <p id="oScoreVal">0</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

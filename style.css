@@ -1,0 +1,78 @@
+* {
+    font-family: "Roboto Mono", monospace;
+    color: #003131;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    width: 41rem;
+    background-color: #003131
+}
+
+#rowb .square {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.square {
+    background-color: white;
+    height: 13rem;
+    width: 13rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10rem;
+    font-weight: bolder;
+    pointer-events: none;
+    user-select: none;
+}
+
+.xSquare {
+    color: #00d1d1;
+}
+
+.oSquare {
+    color: #ff2e2e;
+}
+
+.selectable {
+    pointer-events: all!important;
+    color: white;
+}
+
+.selectable:hover {
+    cursor: pointer;
+}
+
+.colorX {
+    color: #c8ffff;
+}
+
+.colorO {
+    color: #ffcece;
+}
+
+#scores {
+    width: 41rem;
+    margin: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.score {
+    display: flex;
+    font-size: 2rem;
+    width: 10rem;
+}
+
+.score p {
+    margin: 0px;
+}

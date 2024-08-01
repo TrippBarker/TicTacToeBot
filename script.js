@@ -32,7 +32,8 @@ let winConditions = [
     ['a-a', 'b-b', 'c-c'],
     ['a-c', 'b-b', 'c-a']
 ];
-let boardState = [];
+let boardState = 'a-a/a-b/a-c/b-a/b-b/b-c/c-a/c-b/c-c';
+let encounteredBoards = { 'a-a/a-b/a-c/b-a/b-b/b-c/c-a/c-b/c-c': [3, 3, 3, 3, 3, 3, 3, 3, 3]};
 
 // Training Params
 let reward = 3;
@@ -45,7 +46,6 @@ let sides = ['a-b', 'b-c', 'c-b', 'b-a'];
 let rotatedSides = ['a-b', 'b-c', 'c-b', 'b-a'];
 
 function userInput(selection){
-    console.log(selection.target.id);
     if (plays == 0){
         switch (selection.target.id) {
             case 'a-c':
@@ -87,6 +87,7 @@ function squareSelected(squareID) {
     square.classList.add(turn == "X" ? "xSquare" : "oSquare");
     turn == "X" ? xSquares += '['+square.id+']' : oSquares += '['+square.id+']';
     square.classList.remove('color'+turn);
+    boardState = boardState.replaceAll(squareID, turn);
     checkForWin(turn == "X" ? xSquares : oSquares);
 }
 
@@ -125,7 +126,19 @@ function checkForWin(squares) {
 }
 
 function aiTurn() {
-    board.classList.add('ignoreInput');
+    // board.classList.add('ignoreInput');\
+    let boardEncountered = false;
+    for (let i = 0; i < Object.keys(encounteredBoards).length; i++){
+        if (boardState == Object.keys(encounteredBoards)[i]){
+            boardEncountered = true;
+            i = Object.keys(encounteredBoards).length;
+        }
+    }
+    if (!boardEncountered){
+        console.log('adding');
+        encounteredBoards[boardState] = [''];
+    }
+    console.log(Object.keys(encounteredBoards));
 }
 
 function hoverSelect(square) {
@@ -152,7 +165,7 @@ function resetBoard(){
     xScoreVal.textContent = xScore;
     tieScoreVal.textContent = tieScore;
     oScoreVal.textContent = oScore;
-    boardState = [null, null, null, null, null, null, null, null, null];
+    boardState = 'a-a/a-b/a-c/b-a/b-b/b-c/c-a/c-b/c-c';
     rotatedCorners = corners;
     rotatedSides = sides;
 }

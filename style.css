@@ -3,6 +3,10 @@
     color: #003131;
 }
 
+h1 {
+    text-align: center;
+}
+
 body {
     display: flex;
     flex-direction: column;
@@ -43,8 +47,13 @@ body {
     color: #ff2e2e;
 }
 
+.ignoreInput div {
+    user-select: none;
+    pointer-events: none !important;
+}
+
 .selectable {
-    pointer-events: all!important;
+    pointer-events: all;
     color: white;
 }
 

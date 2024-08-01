@@ -125,7 +125,7 @@ function checkForWin(squares) {
 }
 
 function aiTurn() {
-    // board.classList.add('ignoreInput');
+    board.classList.add('ignoreInput');
 }
 
 function hoverSelect(square) {
@@ -154,6 +154,7 @@ function resetBoard(){
     oScoreVal.textContent = oScore;
     boardState = [null, null, null, null, null, null, null, null, null];
     rotatedCorners = corners;
+    rotatedSides = sides;
 }
 
 // listeners

@@ -32,8 +32,6 @@ let winConditions = [
     ['a-a', 'b-b', 'c-c'],
     ['a-c', 'b-b', 'c-a']
 ];
-let boardState = 'a-a/a-b/a-c/b-a/b-b/b-c/c-a/c-b/c-c';
-let encounteredBoards = { 'a-a/a-b/a-c/b-a/b-b/b-c/c-a/c-b/c-c': [3, 3, 3, 3, 3, 3, 3, 3, 3]};
 
 // Training Params
 let reward = 3;
@@ -44,6 +42,10 @@ let corners = ['a-a', 'a-c', 'c-c', 'c-a'];
 let rotatedCorners = ['a-a', 'a-c', 'c-c', 'c-a'];
 let sides = ['a-b', 'b-c', 'c-b', 'b-a'];
 let rotatedSides = ['a-b', 'b-c', 'c-b', 'b-a'];
+let boardState = 'a-a/a-b/a-c/b-a/b-b/b-c/c-a/c-b/c-c';
+let boardStateOrder = [];
+let boardStatePlays = [];
+let encounteredBoards = { 'a-a/a-b/a-c/b-a/b-b/b-c/c-a/c-b/c-c': [3, 3, 3, 3, 3, 3, 3, 3, 3]};
 
 function userInput(selection){
     if (plays == 0){
@@ -80,7 +82,8 @@ function userInput(selection){
     }
 }
 
-function squareSelected(squareID) {
+async function squareSelected(squareID) {
+    board.classList.add('ignoreInput');
     let square = document.getElementById(squareID);
     square.textContent = turn;
     square.classList.remove('selectable');
@@ -88,7 +91,7 @@ function squareSelected(squareID) {
     turn == "X" ? xSquares += '['+square.id+']' : oSquares += '['+square.id+']';
     square.classList.remove('color'+turn);
     boardState = boardState.replaceAll(squareID, turn);
-    checkForWin(turn == "X" ? xSquares : oSquares);
+    await checkForWin(turn == "X" ? xSquares : oSquares).then(board.classList.remove('ignoreInput'));
 }
 
 function rotateBoard() {
@@ -106,11 +109,25 @@ function rotateBoard() {
     boardSquares[7].id = rotatedSides[2];
 }
 
-function checkForWin(squares) {
+async function checkForWin(squares) {
     ++plays;
     for (let i = 0; i < winConditions.length; i++){
         if (squares.includes(winConditions[i][0]) && squares.includes(winConditions[i][1]) && squares.includes(winConditions[i][2])){
             turn == "X" ? ++xScore : ++oScore;
+            for (let i = 0; i < boardStateOrder.length; i ++){
+                let splitBoard = boardStateOrder[i].split('/');
+                for (let j = 0; j < splitBoard.length; j++){
+                    if (splitBoard[j] == boardStatePlays[i]){
+                        turn == 'X' ? encounteredBoards[boardStateOrder[i]][j] -= punishment : encounteredBoards[boardStateOrder[i]][j] += reward;
+                        if (encounteredBoards[boardStateOrder[i]][j] == 0){
+                            encounteredBoards[boardStateOrder[i]][j] = 1;
+                        }
+                        j = splitBoard.length;
+                    }
+                }
+                if (turn == "X"){
+                }
+            }
             resetBoard();
             i = winConditions.length;
         }
@@ -126,7 +143,7 @@ function checkForWin(squares) {
 }
 
 function aiTurn() {
-    // board.classList.add('ignoreInput');\
+    let splitBoard = boardState.split('/');
     let boardEncountered = false;
     for (let i = 0; i < Object.keys(encounteredBoards).length; i++){
         if (boardState == Object.keys(encounteredBoards)[i]){
@@ -135,10 +152,35 @@ function aiTurn() {
         }
     }
     if (!boardEncountered){
-        console.log('adding');
-        encounteredBoards[boardState] = [''];
+        let squareWeights = [];
+        for (let availableSquare of splitBoard){
+            if (availableSquare != 'X' && availableSquare != 'O'){
+                squareWeights.push(3);
+            } else {
+                squareWeights.push(-1);
+            }
+        }
+        encounteredBoards[boardState] = squareWeights;
     }
-    console.log(Object.keys(encounteredBoards));
+    let totalWeights = 0;
+    let weightDistrubtion = [];
+    for(let weight of encounteredBoards[boardState]){
+        if (weight != -1){
+            totalWeights += weight;
+            weightDistrubtion.push(totalWeights);
+        } else {
+            weightDistrubtion.push(-1);
+        }
+    }
+    let aiChoice = Math.floor(Math.random() * totalWeights);
+    for (let i = 0; i < weightDistrubtion.length; i++){
+        if (aiChoice < weightDistrubtion[i]){
+            boardStateOrder.push(boardState);
+            boardStatePlays.push(splitBoard[i]);
+            squareSelected(splitBoard[i]);
+            i = weightDistrubtion.length;
+        }
+    }
 }
 
 function hoverSelect(square) {
@@ -151,6 +193,7 @@ function hoverDeselect(square) {
 }
 
 function resetBoard(){
+    console.log(encounteredBoards);
     for (let square of boardSquares){
         square.classList.add('selectable');
         square.classList.remove('xSquare');
@@ -168,6 +211,8 @@ function resetBoard(){
     boardState = 'a-a/a-b/a-c/b-a/b-b/b-c/c-a/c-b/c-c';
     rotatedCorners = corners;
     rotatedSides = sides;
+    boardStateOrder = [];
+    boardStatePlays = [];
 }
 
 // listeners
